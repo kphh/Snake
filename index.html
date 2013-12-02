@@ -2,15 +2,18 @@
 <html>
   <head>
     <title>Snake</title>
+
+    <link type="text/css" rel="stylesheet" href="snake.css">
+
     <script type="application/javascript" src="jquery-1.9.1.js"></script>
     <script type="application/javascript" src="underscore.js"></script>
     <script type="application/javascript" src="snake.js"></script>
     <script type="application/javascript" src="snake_ui.js"></script>
   </head>
   <body>
-    <pre></pre>
+    <div class="display"></div>
     <script type="application/javascript">
-      var $el = $("pre");
+      var $el = $("div.display");
       var view = new Project.View($el);
       view.start();
     </script>
