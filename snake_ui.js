@@ -9,12 +9,21 @@
   _.extend(View.prototype, {
     step: function() {
       this.board.snake.move();
-      this.$el.html(this.board.render());
+
+      this.board.checkEating();
+      this.board.checkApples();
+
+      if (this.board.checkCollisions()) {
+        clearInterval(this.intervalID);
+        alert("You're dead!");
+      } else {
+        this.$el.html(this.board.render());
+      }
     },
 
     start: function() {
       // Construct board
-      this.board = new Project.Board(15,15);
+      this.board = new Project.Board(15,15,5);
 
       // Bind key events
       var self = this;
@@ -41,7 +50,7 @@
         });
       });
 
-      window.setInterval(function() { self.step(); }, 500);
+      this.intervalID = window.setInterval(function() { self.step(); }, 333);
     }
   });
 })(this);

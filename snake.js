@@ -32,6 +32,7 @@
   var Snake = Project.Snake = function(startCoord) {
     this.dir = "N";
     this.segments = [startCoord];
+    this.growthCounter = 0;
   };
 
   _.extend(Snake.prototype, {
@@ -39,26 +40,52 @@
       // Create new head off of old one
       this.segments.unshift(this.segments[0].plus(this.dir));
       // Remove tail
-      this.segments.pop();
+      if (this.growthCounter <= 0) {
+        this.segments.pop();
+      }
+      else {
+        this.growthCounter -= 1;
+      }
     },
 
     turn: function(dir) {
       this.dir = dir;
+    },
+
+    head: function() {
+      return this.segments[0];
+    },
+
+    grow: function() {
+      this.growthCounter = 3;
     }
   });
 
 
 
-  var Board = Project.Board = function(width, height) {
+  var Board = Project.Board = function(width, height, maxApples) {
     this.width = width;
     this.height = height;
+    this.maxApples = maxApples;
 
     var startCoord = new Coord(Math.floor(width/2),
                                Math.floor(height/2));
     this.snake = new Snake(startCoord);
+
+    this.apples = [];
+    this.generateApples(maxApples);
   }
 
   _.extend(Board.prototype, {
+    // might generate apples under snake
+    generateApples: function(numApples) {
+      for (var i = 0; i < numApples; i++) {
+        var x = Math.floor(Math.random()*this.width);
+        var y = Math.floor(Math.random()*this.height);
+        this.apples.push(new Coord(x,y));
+      }
+    },
+
     render: function() {
       // Render board to ASCII art
 
@@ -71,9 +98,14 @@
         }
       }
 
+      // Change display character of apples
+      this.apples.forEach(function(coord) {
+        rows[coord.y][coord.x] = 'a';
+      });
+
       // Change display character of snake segments
       this.snake.segments.forEach(function(coord) {
-        rows[coord.y][coord.x] = 's';
+        rows[coord.y][coord.x] = 'S';
       });
 
       var displayString = "";
@@ -82,6 +114,54 @@
       }
 
       return displayString;
+    },
+
+    checkCollisions: function() {
+      var head = this.snake.head();
+      if (head.x < 0 || head.x >= this.width) {
+        return true;
+      }
+
+      if (head.y < 0 || head.y >= this.height) {
+        return true;
+      }
+
+      for (var i = 1; i < this.snake.segments.length; i++) {
+        var coord = this.snake.segments[i];
+        if (coord.x === head.x && coord.y === head.y) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    checkEating: function() {
+      var head = this.snake.head();
+
+      for (var i = this.apples.length-1; i >= 0; i--) {
+        var coord = this.apples[i];
+
+        if (coord.x === head.x && coord.y === head.y) {
+          this.snake.grow();
+
+          // delete apple
+          this.apples.splice(i, 1);
+        }
+      };
+    },
+
+    checkApples: function() {
+      // check number of apples
+      // if less than max
+      // there is a chance a new one appears this turn
+
+      if (this.apples.length < this.maxApples) {
+        var num = Math.floor(Math.random()*10); // 1 in 10 chance
+        if (num === 0) {
+          this.generateApples(1);
+        }
+      }
     }
   });
 
