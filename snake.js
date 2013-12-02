@@ -33,6 +33,7 @@
     this.dir = "N";
     this.segments = [startCoord];
     this.growthCounter = 0;
+    this.score = 0;
   };
 
   _.extend(Snake.prototype, {
@@ -58,6 +59,7 @@
 
     grow: function() {
       this.growthCounter = 3;
+      this.score += 10;
     }
   });
 

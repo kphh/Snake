@@ -18,3 +18,14 @@ div.row {
 .apple {
   background-color: red;
 }
+
+#scorebox {
+  clear: left;
+  font-size: 48px;
+  padding: 10px;
+}
+
+#pausebox {
+  clear: left;
+  font-size: 48px;
+}

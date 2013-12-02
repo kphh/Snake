@@ -30,6 +30,9 @@
           $("div.row:last").append("<div class='cell' id='" + r + "x" + c +"'></div>");
         };
       };
+
+      this.$el.append("<div id='scorebox'></div>");
+      this.$el.append("<div id='pausebox'></div>");
     },
 
     render: function() {
@@ -52,7 +55,7 @@
         $('#'+id).addClass('snake');
       }
 
-
+      $('#scorebox').html("Score: "+this.board.snake.score);
     },
 
     start: function() {
@@ -64,6 +67,9 @@
 
       // Initial render
       this.render();
+
+      // Setup Pause
+      this.paused = false;
 
       // Bind key events
       var self = this;
@@ -86,7 +92,20 @@
             event.preventDefault();
             self.board.snake.turn("S");
             break;
-          }
+          case 80: // P
+            event.preventDefault();
+            if (self.paused) {
+              self.intervalID = window.setInterval(function() { self.step(); }, 333);
+              self.paused = false;
+              $("#pausebox").html(" ");
+            }
+            else {
+              clearInterval(self.intervalID);
+              self.paused = true;
+              $("#pausebox").html("PAUSED");
+            }
+            break;
+          };
         });
       });
 
