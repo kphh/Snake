@@ -36,10 +36,10 @@
 
   _.extend(Snake.prototype, {
     move: function() {
-      // Remove tail
-      this.segments.pop();
       // Create new head off of old one
       this.segments.unshift(this.segments[0].plus(this.dir));
+      // Remove tail
+      this.segments.pop();
     },
 
     turn: function(dir) {
