@@ -1,8 +1,6 @@
 (function(root) {
   var Project = root.Project = (root.Project || {});
 
-  // var _ = require("./underscore");
-
   var Coord = Project.Coord = function(x, y) {
     this.x = x;
     this.y = y;
@@ -79,7 +77,7 @@
   }
 
   _.extend(Board.prototype, {
-    // might generate apples under snake
+    // Might generate apples under snake
     generateApples: function(numApples) {
       for (var i = 0; i < numApples; i++) {
         var x = Math.floor(Math.random()*this.width);
@@ -147,16 +145,16 @@
         if (coord.x === head.x && coord.y === head.y) {
           this.snake.grow();
 
-          // delete apple
+          // Delete apple
           this.apples.splice(i, 1);
         }
       };
     },
 
     checkApples: function() {
-      // check number of apples
-      // if less than max
-      // there is a chance a new one appears this turn
+      // Check number of apples
+      // If less than max
+      // There is a chance a new one appears this turn
 
       if (this.apples.length < this.maxApples) {
         var num = Math.floor(Math.random()*10); // 1 in 10 chance
@@ -168,7 +166,3 @@
   });
 
 })(this);
-
-// var board = new this.Project.Board(9,9);
-// console.log(board.render());
-// console.log(board.snake.segments);
